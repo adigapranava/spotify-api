@@ -79,6 +79,29 @@ app.get('/artist/:name', (req, res, next) => {
   }
 });
 
+app.get('/track/:name', (req, res, next) => {
+  const requestTrack = () => {
+    const { name } = req.params;
+
+    request({
+      url: `${BASE_SPOTIFY_ADDRESS}/search?q=${name}&type=track`,
+      headers: { Authorization: `Bearer ${globalAccessToken}` }
+    }, (error, response, body) => {
+      if (error) return next(error);
+
+      res.json(JSON.parse(body));
+    });
+  }
+
+  if (!globalAccessToken) {
+    requestNewToken()
+      .then(() => requestTrack())
+      .catch(error => next(error));
+  } else {
+    requestTrack();
+  }
+});
+
 app.get('/artist/:id/top-tracks', (req, res, next) => {
   const requestTopTracks = () => {
     const { id } = req.params;
