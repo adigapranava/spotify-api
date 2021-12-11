@@ -53,7 +53,7 @@ requestNewToken();
 setInterval(() => requestNewToken(), REFRESH_RATE);
 
 app.get('/', (req, res) => {
-  res.send('API up. Try `/artist/:name` or `/artist/:name/top-tracks`');
+  res.send('API up. Try `/artist/:name` or `/artist/:name/top-tracks` or \'top-tracks\' or \`track/:trackname\` ');
 });
 
 app.get('/artist/:name', (req, res, next) => {
