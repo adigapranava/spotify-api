@@ -102,6 +102,28 @@ app.get('/track/:name', (req, res, next) => {
   }
 });
 
+app.get('/top-tracks/', (req, res, next) => {
+  const requestTrack = () => {
+    request({
+      url: `${BASE_SPOTIFY_ADDRESS}/playlists/5ABHKGoOzxkaa28ttQV9sE?market=ES`,
+      headers: { Authorization: `Bearer ${globalAccessToken}` }
+    }, (error, response, body) => {
+      if (error) return next(error);
+
+      res.json(JSON.parse(body));
+    });
+  }
+
+  if (!globalAccessToken) {
+    requestNewToken()
+      .then(() => requestTrack())
+      .catch(error => next(error));
+  } else {
+    requestTrack();
+  }
+});
+
+
 app.get('/artist/:id/top-tracks', (req, res, next) => {
   const requestTopTracks = () => {
     const { id } = req.params;
